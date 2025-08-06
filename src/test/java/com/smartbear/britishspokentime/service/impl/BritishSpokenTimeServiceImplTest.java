@@ -19,7 +19,7 @@ public class BritishSpokenTimeServiceImplTest {
 
     @Test
     @DisplayName("Should convert valid LocalTime inputs to expected British spoken time")
-    void testConvertToBritishSpokenTime_validCases() {
+    void testConvert_validCases() {
         List<TestCase> cases = List.of(
                 new TestCase("00:00", "midnight"),
                 new TestCase("12:00", "noon"),
@@ -37,7 +37,7 @@ public class BritishSpokenTimeServiceImplTest {
         );
 
         for (TestCase testCase : cases) {
-            String actual = service.convertToBritishSpokenTime(testCase.localTime);
+            String actual = service.convert(testCase.localTime);
             assertEquals(testCase.expectedOutput, actual, "Failed for input: " + testCase.inputTime);
         }
     }

@@ -1,28 +1,28 @@
 package com.smartbear.britishspokentime.facade.impl;
 
 import com.smartbear.britishspokentime.exception.InvalidInputTimeException;
-import com.smartbear.britishspokentime.facade.BritishSpokenTimeFacade;
-import com.smartbear.britishspokentime.service.BritishSpokenTimeService;
+import com.smartbear.britishspokentime.facade.SpokenTimeFacade;
+import com.smartbear.britishspokentime.service.SpokenTimeLocaleResolverService;
 import com.smartbear.britishspokentime.service.InputTimeParser;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 
 @Service
-public class BritishSpokenTimeFacadeImpl implements BritishSpokenTimeFacade {
+public class SpokenTimeFacadeImpl implements SpokenTimeFacade {
     private final InputTimeParser inputTimeParser;
-    private final BritishSpokenTimeService britishSpokenTimeService;
+    private final SpokenTimeLocaleResolverService spokenTimeLocaleResolverService;
 
-    public BritishSpokenTimeFacadeImpl(InputTimeParser inputTimeParser, BritishSpokenTimeService britishSpokenTimeService) {
+    public SpokenTimeFacadeImpl(InputTimeParser inputTimeParser, SpokenTimeLocaleResolverService spokenTimeLocaleResolverService) {
         this.inputTimeParser = inputTimeParser;
-        this.britishSpokenTimeService = britishSpokenTimeService;
+        this.spokenTimeLocaleResolverService = spokenTimeLocaleResolverService;
     }
 
     @Override
-    public String apply(String timeInput) {
+    public String apply(String timeInput, String locale) {
         try {
             LocalTime time = inputTimeParser.parseTimeInput(timeInput);
-            return britishSpokenTimeService.convertToBritishSpokenTime(time);
+            return spokenTimeLocaleResolverService.resolve(locale).convert(time);
         } catch (InvalidInputTimeException e) {
             return e.getMessage();
 

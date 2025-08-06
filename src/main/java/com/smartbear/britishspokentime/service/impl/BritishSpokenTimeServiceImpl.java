@@ -1,12 +1,13 @@
 package com.smartbear.britishspokentime.service.impl;
 
-import com.smartbear.britishspokentime.service.BritishSpokenTimeService;
+import com.smartbear.britishspokentime.service.SpokenTimeService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.Locale;
 
 @Service
-public class BritishSpokenTimeServiceImpl implements BritishSpokenTimeService {
+public class BritishSpokenTimeServiceImpl implements SpokenTimeService {
     private static final String[] units = {
             "", "one", "two", "three", "four", "five", "six", "seven",
             "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen",
@@ -20,9 +21,12 @@ public class BritishSpokenTimeServiceImpl implements BritishSpokenTimeService {
 
 
     @Override
-    public String convertToBritishSpokenTime(LocalTime time) {
-        String output = "...";
+    public String getLocale() {
+        return Locale.UK.toString();
+    }
 
+    @Override
+    public String convert(LocalTime time) {
         int hour24 = time.getHour();
         int hour12 = time.getHour() % 12;
         int min = time.getMinute();

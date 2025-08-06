@@ -1,11 +1,13 @@
 package com.smartbear.britishspokentime.facade.impl;
 
 import com.smartbear.britishspokentime.exception.InvalidInputTimeException;
-import com.smartbear.britishspokentime.service.BritishSpokenTimeService;
+import com.smartbear.britishspokentime.service.SpokenTimeLocaleResolverService;
 import com.smartbear.britishspokentime.service.InputTimeParser;
 
 import java.time.LocalTime;
+import java.util.Locale;
 
+import com.smartbear.britishspokentime.service.impl.BritishSpokenTimeServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,16 +18,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BritishSpokenTimeFacadeImplTest {
+class SpokenTimeFacadeImplTest {
 
     @Mock
     private InputTimeParser inputTimeParser;
 
     @Mock
-    private BritishSpokenTimeService britishSpokenTimeService;
+    private BritishSpokenTimeServiceImpl britishSpokenTimeService;
+
+    @Mock
+    private SpokenTimeLocaleResolverService spokenTimeLocaleResolverService;
 
     @InjectMocks
-    private BritishSpokenTimeFacadeImpl facade;
+    private SpokenTimeFacadeImpl facade;
 
     @Test
     void testApply_validTimeInput_returnsSpokenTime() {
@@ -33,14 +38,15 @@ class BritishSpokenTimeFacadeImplTest {
         LocalTime expectedTime = LocalTime.of(14, 0);
         String expectedSpoken = "two o'clock";
 
+        when(spokenTimeLocaleResolverService.resolve(any())).thenReturn(britishSpokenTimeService);
         when(inputTimeParser.parseTimeInput(input)).thenReturn(expectedTime);
-        when(britishSpokenTimeService.convertToBritishSpokenTime(expectedTime)).thenReturn(expectedSpoken);
+        when(britishSpokenTimeService.convert(expectedTime)).thenReturn(expectedSpoken);
 
-        String result = facade.apply(input);
+        String result = facade.apply(input, Locale.UK.toString());
 
         assertEquals(expectedSpoken, result);
         verify(inputTimeParser).parseTimeInput(input);
-        verify(britishSpokenTimeService).convertToBritishSpokenTime(expectedTime);
+        verify(britishSpokenTimeService).convert(expectedTime);
     }
 
     @Test
@@ -49,7 +55,7 @@ class BritishSpokenTimeFacadeImplTest {
 
         when(inputTimeParser.parseTimeInput(input)).thenThrow(new RuntimeException("DB down"));
 
-        String result = facade.apply(input);
+        String result = facade.apply(input, Locale.UK.toString());
 
         assertEquals("Internal error happened.", result);
         verify(inputTimeParser).parseTimeInput(input);
@@ -63,7 +69,7 @@ class BritishSpokenTimeFacadeImplTest {
         InvalidInputTimeException invalidInputTimeException = new InvalidInputTimeException("Issue parsing the time");
         when(inputTimeParser.parseTimeInput(input)).thenThrow(invalidInputTimeException);
 
-        String result = facade.apply(input);
+        String result = facade.apply(input, Locale.UK.toString());
 
         assertEquals(invalidInputTimeException.getMessage(), result);
         verify(inputTimeParser).parseTimeInput(input);
