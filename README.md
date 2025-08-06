@@ -20,7 +20,7 @@ mvn test
 
 ## To run the project
 ```
-java -jar british-spoken-time-1.0-SNAPSHOT.jar
+java -jar target/british-spoken-time-1.0-SNAPSHOT.jar
 ```
 
 - After running the project, there will be a command line which accepts time in H:mm format
