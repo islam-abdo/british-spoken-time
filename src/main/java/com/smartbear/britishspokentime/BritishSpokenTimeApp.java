@@ -24,7 +24,7 @@ public class BritishSpokenTimeApp implements CommandLineRunner {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the British Spoken Time App!");
         while (true) {
-            System.out.print("Enter time in HH:mm format (or 'exit' to quit): ");
+            System.out.print("Enter time in H:mm format (or 'exit' to quit): ");
             String input = scanner.nextLine().trim();
             if ("exit".equalsIgnoreCase(input)) {
                 System.out.println("Exiting...");

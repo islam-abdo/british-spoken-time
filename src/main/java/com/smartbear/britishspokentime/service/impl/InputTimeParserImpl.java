@@ -1,5 +1,6 @@
 package com.smartbear.britishspokentime.service.impl;
 
+import com.smartbear.britishspokentime.constants.Constants;
 import com.smartbear.britishspokentime.exception.InvalidInputTimeException;
 import com.smartbear.britishspokentime.service.InputTimeParser;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,13 @@ public class InputTimeParserImpl implements InputTimeParser {
     @Override
     public LocalTime parseTimeInput(String timeInput) {
         try {
+            if(timeInput == null) {
+                throw new InvalidInputTimeException(Constants.INVALID_TIME_FORMAT_ERROR);
+            }
             return LocalTime.parse(timeInput, TIME_FORMATTER);
 
         } catch (DateTimeParseException e) {
-            throw new InvalidInputTimeException("Invalid time format. Please use HH:mm (e.g., 09:30, 14:00).");
+            throw new InvalidInputTimeException(Constants.INVALID_TIME_FORMAT_ERROR);
         }
     }
 }

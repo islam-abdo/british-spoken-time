@@ -1,12 +1,12 @@
 package com.smartbear.britishspokentime.facade.impl;
 
+import com.smartbear.britishspokentime.exception.InvalidInputTimeException;
 import com.smartbear.britishspokentime.facade.BritishSpokenTimeFacade;
 import com.smartbear.britishspokentime.service.BritishSpokenTimeService;
 import com.smartbear.britishspokentime.service.InputTimeParser;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 
 @Service
 public class BritishSpokenTimeFacadeImpl implements BritishSpokenTimeFacade {
@@ -23,7 +23,7 @@ public class BritishSpokenTimeFacadeImpl implements BritishSpokenTimeFacade {
         try {
             LocalTime time = inputTimeParser.parseTimeInput(timeInput);
             return britishSpokenTimeService.convertToBritishSpokenTime(time);
-        } catch (DateTimeParseException e) {
+        } catch (InvalidInputTimeException e) {
             return e.getMessage();
 
         } catch (Exception e) {
